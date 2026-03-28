@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Login</title>
+<title>Login / Signup</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
 <div class="box">
 <h2>Login</h2>
 <input id="email" placeholder="Email">
@@ -22,8 +21,10 @@
 </div>
 
 <script>
+const WORKER_URL = "https://YOUR_WORKER_URL"; // replace with your deployed Worker URL
+
 async function signup(){
-  await fetch("/signup",{
+  await fetch(WORKER_URL+"/signup",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({
@@ -36,20 +37,15 @@ async function signup(){
 }
 
 async function login(){
-  const res = await fetch("/login",{
+  const res = await fetch(WORKER_URL+"/login",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      email:email.value,
-      password:password.value
-    })
+    body:JSON.stringify({email:email.value,password:password.value})
   });
-
   const data = await res.json();
   localStorage.setItem("username",data.username);
   window.location="chat.html";
 }
 </script>
-
 </body>
 </html>

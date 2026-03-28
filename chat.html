@@ -4,30 +4,20 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
 <div class="container">
+  <div class="sidebar">
+    <input id="searchUser" placeholder="Search">
+    <button onclick="search()">Search</button>
+    <ul id="users"></ul>
+  </div>
 
-<div class="sidebar">
-<input id="searchUser" placeholder="Search">
-<ul id="users"></ul>
+  <div class="chat">
+    <h3 id="chatWith"></h3>
+    <ul id="messages"></ul>
+    <input id="msg" placeholder="Type message">
+    <button onclick="send()">Send</button>
+  </div>
 </div>
-
-<div class="chat">
-
-<h3 id="chatWith"></h3>
-<ul id="messages"></ul>
-
-<div id="typing"></div>
-
-<input id="msg" placeholder="Type message">
-<button onclick="send()">Send</button>
-
-</div>
-
-</div>
-
-<script src="/socket.io/socket.io.js"></script>
 <script src="app.js"></script>
-
 </body>
 </html>
