@@ -1,23 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
+<title>Chat Hub</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="container">
-  <div class="sidebar">
-    <input id="searchUser" placeholder="Search">
-    <button onclick="search()">Search</button>
-    <ul id="users"></ul>
-  </div>
+<h1>Welcome to Chat Hub 🌚</h1>
+<div id="chat-box"></div>
+<input id="msg" placeholder="Type a message">
+<button onclick="sendMessage()">Send</button>
 
-  <div class="chat">
-    <h3 id="chatWith"></h3>
-    <ul id="messages"></ul>
-    <input id="msg" placeholder="Type message">
-    <button onclick="send()">Send</button>
-  </div>
-</div>
 <script src="app.js"></script>
 </body>
 </html>
