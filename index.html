@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="box">
+<h2>Login</h2>
+<input id="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+
+<h3>OR</h3>
+
+<h2>Sign Up</h2>
+<input id="newEmail" placeholder="Email">
+<input id="newPassword" type="password" placeholder="Password">
+<input id="username" placeholder="Username">
+<button onclick="signup()">Sign Up</button>
+</div>
+
+<script>
+async function signup(){
+  await fetch("/signup",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      email:newEmail.value,
+      password:newPassword.value,
+      username:username.value
+    })
+  });
+  alert("Account created!");
+}
+
+async function login(){
+  const res = await fetch("/login",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      email:email.value,
+      password:password.value
+    })
+  });
+
+  const data = await res.json();
+  localStorage.setItem("username",data.username);
+  window.location="chat.html";
+}
+</script>
+
+</body>
+</html>
