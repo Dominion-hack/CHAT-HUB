@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login / Signup</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="box">
+<h2>Login</h2>
+<input id="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+<button onclick="login()">Login</button>
+
+<h3>OR</h3>
+
+<h2>Sign Up</h2>
+<input id="newEmail" placeholder="Email">
+<input id="newPassword" type="password" placeholder="Password">
+<input id="username" placeholder="Username">
+<button onclick="signup()">Sign Up</button>
+</div>
+
+<script>
+async function signup(){
+  const res = await fetch("/signup", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      email: document.getElementById("newEmail").value,
+      password: document.getElementById("newPassword").value,
+      username: document.getElementById("username").value
+    })
+  });
+  const data = await res.json();
+  if(data.success) alert("Account created!");
+  else alert(data.error);
+}
+
+async function login(){
+  const res = await fetch("/login", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      email: document.getElementById("email").value,
+      password: document.getElementById("password").value
+    })
+  });
+  const data = await res.json();
+  if(data.username){
+    localStorage.setItem("username", data.username);
+    localStorage.setItem("premium", data.premium);
+    window.location="chat.html";
+  } else alert(data.error);
+}
+</script>
+</body>
+</html>
