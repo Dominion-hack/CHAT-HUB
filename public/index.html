@@ -1,51 +1,200 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Login / Signup</title>
-<link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>EMMZYAPP</title>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<style>
+
+body{
+margin:0;
+font-family:sans-serif;
+background:#ece5dd;
+height:100vh;
+display:flex;
+flex-direction:column;
+}
+
+.top{
+height:60px;
+background:#128c7e;
+color:white;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 15px;
+font-weight:bold;
+}
+
+.search{
+padding:10px;
+background:white;
+}
+
+.search input{
+width:100%;
+padding:12px;
+border:none;
+background:#f1f1f1;
+border-radius:10px;
+}
+
+.chat{
+flex:1;
+overflow:auto;
+padding:10px;
+display:flex;
+flex-direction:column;
+}
+
+.message{
+padding:10px;
+margin:5px 0;
+border-radius:12px;
+max-width:70%;
+}
+
+.me{
+background:#25d366;
+align-self:flex-end;
+color:white;
+}
+
+.other{
+background:white;
+align-self:flex-start;
+}
+
+.bottom{
+display:flex;
+padding:10px;
+background:white;
+gap:10px;
+}
+
+.bottom input{
+flex:1;
+padding:12px;
+border:none;
+background:#f1f1f1;
+border-radius:10px;
+}
+
+.bottom button{
+padding:12px 20px;
+border:none;
+background:#25d366;
+color:white;
+border-radius:10px;
+}
+
+.fab{
+position:fixed;
+right:20px;
+bottom:20px;
+width:60px;
+height:60px;
+border-radius:50%;
+border:none;
+background:#25d366;
+color:white;
+font-size:30px;
+}
+
+</style>
 </head>
+
 <body>
-<div class="box">
-<h2>Login</h2>
-<input id="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
-<button onclick="login()">Login</button>
 
-<h3>OR</h3>
-
-<h2>Sign Up</h2>
-<input id="newEmail" placeholder="Email">
-<input id="newPassword" type="password" placeholder="Password">
-<input id="username" placeholder="Username">
-<button onclick="signup()">Sign Up</button>
+<div class="top">
+<div>EMMZY COMMUNITY</div>
+<div id="onlineCount">0 Online</div>
 </div>
 
+<div class="search">
+<input type="text"
+placeholder="Search username...">
+</div>
+
+<div class="chat" id="chat"></div>
+
+<div class="bottom">
+<input type="text"
+id="msg"
+placeholder="Type message...">
+
+<button onclick="sendMessage()">
+Send
+</button>
+</div>
+
+<button class="fab">
++
+</button>
+
 <script>
-const WORKER_URL = "https://YOUR_WORKER_URL"; // replace with your deployed Worker URL
 
-async function signup(){
-  await fetch(WORKER_URL+"/signup",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      email:newEmail.value,
-      password:newPassword.value,
-      username:username.value
-    })
-  });
-  alert("Account created!");
+const socket = io();
+
+const username =
+prompt("Enter username");
+
+socket.emit("join", username);
+
+socket.on("onlineUsers", users => {
+    document.getElementById(
+        "onlineCount"
+    ).innerText =
+    users.length + " Online";
+});
+
+function sendMessage(){
+
+    let input =
+    document.getElementById("msg");
+
+    if(!input.value) return;
+
+    socket.emit("message", {
+        username,
+        text:input.value
+    });
+
+    input.value = "";
+
 }
 
-async function login(){
-  const res = await fetch(WORKER_URL+"/login",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({email:email.value,password:password.value})
-  });
-  const data = await res.json();
-  localStorage.setItem("username",data.username);
-  window.location="chat.html";
-}
+socket.on("message", data => {
+
+    const div =
+    document.createElement("div");
+
+    div.className =
+    "message " +
+    (data.username === username
+    ? "me"
+    : "other");
+
+    div.innerHTML = `
+    <b>@${data.username}</b><br>
+    ${data.text}
+    `;
+
+    document.getElementById("chat")
+    .appendChild(div);
+
+});
+
+socket.on("warning", data => {
+    alert(data.msg);
+});
+
 </script>
+
 </body>
 </html>
